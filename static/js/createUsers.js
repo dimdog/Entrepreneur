@@ -55,7 +55,7 @@
         this.nextStage = function () {
           $location.path('/order');
           this.active = false;
-          dataService.setState("order");
+          dataService.initTiles();
         }
         function numPlayersOK(players){
           return players > 1 && players < 5;
