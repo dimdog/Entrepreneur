@@ -2,7 +2,7 @@
   var app = angular.module("data", ["firebase"]);
  
   app.service('dataService', ['$firebaseArray', '$firebaseObject', function($firebaseArray, $firebaseObject){
-      userRef = new Firebase('https://boiling-heat-634.firebaseio.com/users');
+      var userRef = new Firebase('https://boiling-heat-634.firebaseio.com/users');
       this.users = $firebaseArray(userRef);
       this.addUser = function(name){
         userRef.push({
@@ -13,16 +13,14 @@
         });
       };
 
-      stateRef = new Firebase('https://boiling-heat-634.firebaseio.com/state');
+      var stateRef = new Firebase('https://boiling-heat-634.firebaseio.com/state');
       this.state = $firebaseObject(stateRef);
       this.setState = function(state) {
         stateRef.set({ state: state });
       }
 
-      tilesRef = new Firebase('https://boiling-heat-634.firebaseio.com/tiles');
-      this.availableTiles = $firebaseArray(userRef);
-    
-      
+      var tileRef = new Firebase('https://boiling-heat-634.firebaseio.com/tiles');
+      this.availableTiles = $firebaseArray(tileRef);
       
   }]);
 })();

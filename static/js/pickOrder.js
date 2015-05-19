@@ -1,6 +1,6 @@
 (function(){ 
-  var app = angular.module("pickOrder", ["firebase"]);
-  app.directive("pickOrder", ['$firebaseArray', '$firebaseObject', function($firebaseArray, $firebaseObject) {
+  var app = angular.module("pickOrder", ["data"]);
+  app.directive("pickOrder", ["dataService", function(dataService) {
     return {
       restrict: "E",
       templateUrl: "static/html/pick-order.html",
@@ -33,15 +33,8 @@
                 hand: [8,9,10,11,12]
               },
         }
-        var userRef = new Firebase('https://boiling-heat-634.firebaseio.com/users');
-        var orderRef = new Firebase('https://boiling-heat-634.firebaseio.com/order');
-        var stateRef = new Firebase('https://boiling-heat-634.firebaseio.com/state');
-        var state = $firebaseObject(stateRef);
-        console.log(state);
-        this.state = state.state;
-        this.orderTiles = $firebaseArray(orderRef);
+        this.state = dataService.state;
         this.init = function(){
-          orderRef.set(tiles);
           console.log("here");
         };
       },
