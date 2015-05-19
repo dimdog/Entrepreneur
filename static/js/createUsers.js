@@ -1,46 +1,45 @@
 (function(){ 
-  var app = angular.module("createUsers", ["firebase"]);
-  app.directive("createUsers", ['$firebaseArray', function($firebaseArray) {
+  var app = angular.module("createUsers", ["data"]);
+  app.directive("createUsers", ['$location', 'dataService', function($location, dataService) {
     return {
       restrict: "E",
       templateUrl: "static/html/create-users.html",
       controller: function() {
-        this.ref = new Firebase('https://boiling-heat-634.firebaseio.com/users');
-        this.addUserButtonText = "Add User";
+        this.active = true;
+        this.addUserButtonText = "Add Player";
+        this.deleteUserButtonText = "Delete player";
         this.selectedUser = null; 
         this.newUser="";
-        this.users = $firebaseArray(this.ref);
+        this.users = dataService.users;
         this.addUser = function() {
-          this.ref.push({
-            name: this.newUser,
-            money: 18,
-            seasonals: 0,
-            slots: 0,
-          });
+          dataService.addUser(this.newUser);
           this.newUser ="";
           this.updateText(1);
         };
         this.selectUser = function (user) { 
           this.selectedUser = user; 
+          this.deleteUserButtonText = "Delete " + user.name; 
         };
         this.deleteUser = function() {
           if (this.selectedUser){
-            this.ref.child(this.selectedUser.$id).remove()
+            dataService.userRef.child(this.selectedUser.$id).remove()
             this.selectedUser = null;
           }
           this.updateText(-1);
+          this.deleteUserButtonText = "Delete player";
         };
         this.updateText = function(incr) {
-          if (this.users.length  + (incr || 0)  <5){
+          
+          if (dataService.users.length  + (incr || 0)  <5){
             this.addUserButtonText = "Add " + (this.newUser || "Player");
           }
           else{
             this.addUserButtonText = "Can't add more players";
           }
-          if(this.users.length +(incr || 0) == 1){
+          if(dataService.users.length +(incr || 0) == 1){
             this.startButtonText = "Add one more player!";
           }
-          else if(this.users.length +(incr || 0) == 0){
+          else if(dataService.users.length +(incr || 0) == 0){
             this.startButtonText = "Add some players!";
           }
           else{
@@ -51,13 +50,23 @@
           
         };
         this.submitUserOK = function() {
-          return this.newUser.length > 0 && this.users.length < 5;
+          return this.newUser.length > 0 && dataService.users.length < 5;
         };
+        this.nextStage = function () {
+          $location.path('/order');
+          this.active = false;
+          dataService.setState("order");
+        }
         function numPlayersOK(players){
-          console.log(players);
           return players > 1 && players < 5;
         };
-        this.updateText();
+        function init(){
+          local.updateText(0);
+          $location.path('/players');
+          dataService.setState("players");
+        }
+        var local = this;
+        init();
       },
       controllerAs: "userCtrl"
     };
