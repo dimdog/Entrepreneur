@@ -1,8 +1,6 @@
 import os
 import struct
-import serial
 import time
-import ConfigParser
 
 from flask import Flask, Response, render_template, request
 
@@ -21,7 +19,7 @@ def root():
     
 
 if __name__ == '__main__':
-  app.run(port=80,host='0.0.0.0')
+  app.run(port=3000,host='0.0.0.0')
 
 
 

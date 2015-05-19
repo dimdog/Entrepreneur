@@ -1,22 +1,28 @@
 (function(){ 
   var app = angular.module("game", ["firebase"]);
   
-  app.directive("createUsers", function() {
+  app.directive("createUsers", ['$firebaseArray', function($firebaseArray) {
     return {
       restrict: "E",
       templateUrl: "static/html/create-users.html",
       controller: function() {
-        this.users = ['ben','gigi'];
-
+        var myDataRef = new Firebase('https://boiling-heat-634.firebaseio.com/users');
+        this.users = $firebaseArray(myDataRef);
         this.addUser = function() {
-          this.users.push(this.newUser);
-          this.curUser ="";
+          myDataRef.push({
+            name: this.newUser,
+            money: 18,
+            seasonals: 0,
+            slots: 0,
+          });
+          console.log(this.users);
+          this.newUser ="";
           
         };
 
       },
       controllerAs: "userCtrl"
     };
-  });
+  }]);
 
 })();

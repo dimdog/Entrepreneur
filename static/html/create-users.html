@@ -1,15 +1,12 @@
 <ul>
-  <li ng-repeat="user in userCtrl.users">
-    {{user}}
+  <li ng-click="console.log(user)" ng-repeat="user in userCtrl.users">
+    <p> {{user}}</p>
   </li>
 </ul>
 
 <!-- push a new message onto the array -->
 <form ng-submit="userCtrl.addUser()">
-  <fieldset class="form-group">
-    <input ng-model="newMessageText" />
-  </fieldset>
-  <fieldset class="form-group">
-    <input type="submit" class="btn btn-primary pull-right" value="Submit Review" />
-  </fieldset>
+  <input ng-model="userCtrl.newUser" />
+  <button type="submit">Add User</button>
 </form>
+  <button ng-click="userCtrl.addUser()">Delete user</button>

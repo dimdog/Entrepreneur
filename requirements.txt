@@ -1,4 +1,1 @@
 flask
-simplejson
-PyAudio
-pyzmq
