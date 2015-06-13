@@ -35,7 +35,7 @@ var users = (function() {
     
     userTileOrder = [];
     for (key in curUsers){
-      userTileOrder.push(curUsers[key]);
+      userTileOrder.push(key);
     }
     userTileOrder.sort(function(a,b){
       if (a.tile < b.tile) 

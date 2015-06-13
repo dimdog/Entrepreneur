@@ -31,23 +31,18 @@ var order = (function() {
         },
   }
   var curUser = null;
+  var curTiles = {};
 
   function onEnter(e) {
     if (e.keyCode == 13) {
       var name = $('#nameInput').val();
-      myDataRef.push({
-        name: name,
-        money: 18,
-        seasonals: 0,
-        slots: 0,
-      });
       $('#nameInput').val('');
     }
   }
   
   
   function displayUsers(message) {
-    var tag =  $('<li/>').text(message.val()).addClass("list-group-item ").attr('id',message.key()).attr('val', message.val()).appendTo($('#tilesDiv'));
+    var tag =  $('<li/>').text(message.val()).addClass("list-group-item ").attr('id',message.key()).appendTo($('#tilesDiv'));
     tag.click(function(){
       $('.active').removeClass('active');
       selected = message.key();
@@ -63,28 +58,34 @@ var order = (function() {
 
 
   function setUp(){
-    curUser =  users.tileSelectionTurn(true);
+    curUserKey =  users.tileSelectionTurn(true);
     $("#game").html("<div id='tilesDiv' class='list-group'></div>" +
-       "<button id='pick-tile' type='button' class='btn btn-lg btn-success'>Pick A Tile " + curUser.name+ "</button>"
+       "<button id='pick-tile' type='button' class='btn btn-lg btn-success'>Pick A Tile " + users.users[curUserKey].name+ "</button>"
       );
     $('.active').keypress(order.onEnter);
 
     order.ref.on('child_added', function(snapshot) {
+        curTiles[snapshot.key()] = snapshot.val();
         order.displayUsers(snapshot);
       });
 
     order.ref.on('child_removed', function(snapshot) {
-       var tag = $("#"+snapshot.key())
+       var tag = $("#"+snapshot.key());
        tag.remove();
+       delete curTiles[snapshot.key()];
     });
 
     $('#pick-tile').click(function(){
+      console.log(curTiles);
+      console.log(selected);
+      console.log(curTiles[selected]);
+      users.setTile(curUserKey, curTiles[selected]);
       myDataRef.child(selected).remove();
-      var tag = $("#"+selected);
-      console.log(tag[0]);
-      console.log(tag.attr('val'));
-      
-      users.setTile(curUser, tag.attr('val'));
+      curUserKey =  users.tileSelectionTurn(true);
+      if (curUserKey == null){
+        return tearDown();
+      } 
+      $('#pick-tile').text("Pick A Tile " + users.users[curUserKey].name);
     });
   
   };
