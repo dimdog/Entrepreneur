@@ -6,10 +6,10 @@
       restrict: "E",
       templateUrl: "static/html/create-users.html",
       controller: function() {
-        this.users = [];
+        this.users = ['ben','gigi'];
 
         this.addUser = function() {
-          this.users.push(this.curUser);
+          this.users.push(this.newUser);
           this.curUser ="";
           
         };

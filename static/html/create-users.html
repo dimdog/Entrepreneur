@@ -1,8 +1,15 @@
-<form name="users" ng-submit="userCtrl.addUser()">
-<fieldset class="form-group">
-  <textarea ng-model="userCtrl.newUser" class="form-control" placeholder="Who's playing?" title="newUser"> </textarea>
-</fieldset>
-<li ng-repeat="users in userCtrl.users">
+<ul>
+  <li ng-repeat="user in userCtrl.users">
+    {{user}}
+  </li>
+</ul>
+
+<!-- push a new message onto the array -->
+<form ng-submit="userCtrl.addUser()">
+  <fieldset class="form-group">
+    <input ng-model="newMessageText" />
+  </fieldset>
+  <fieldset class="form-group">
+    <input type="submit" class="btn btn-primary pull-right" value="Submit Review" />
+  </fieldset>
 </form>
-
-
