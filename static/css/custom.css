@@ -1,0 +1,10 @@
+.orderTile {
+  max-width: 20vh;
+  max-height: 20vh;
+  padding: 0px;
+  display: inline-block;
+
+}
+.activeTile {
+  background-color: blue;
+}

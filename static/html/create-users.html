@@ -1,4 +1,4 @@
-<div ng-show="userCtrl.active">
+<div ng-show="userCtrl.state.state == 'players'">
   <li class="list-group-item" ng-class="{active : userCtrl.selectedUser === user}" ng-click="userCtrl.selectUser(user)" ng-repeat="user in userCtrl.users">
     <p> {{user.name}}</p>
   </li>

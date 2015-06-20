@@ -13,6 +13,20 @@
           slots: 0,
         });
       };
+      this.deleteUser = function(user){
+        userRef.child(user.$id).remove()
+      }
+
+      this.syncUsers = function(){
+        var localUsers = [];
+        for (var i = 0; i < this.users.length; i++){
+          localUsers.push(this.users[i]);
+        }
+        return localUsers;
+      };
+
+
+
 
       var stateRef = new Firebase('https://boiling-heat-634.firebaseio.com/state');
       this.state = $firebaseObject(stateRef);
@@ -20,14 +34,26 @@
         stateRef.set({ state: state });
       };
 
+
+
+
       var tileRef = new Firebase('https://boiling-heat-634.firebaseio.com/tiles');
       this.availableTiles = $firebaseArray(tileRef);
-      this.giveUserTile = function(user, tile){
+      this.updateUser = function(user, updateObj){
+        userRef.child(user.$id).update(updateObj);
+        
       };
+      this.giveUserTileNum = function(user, tile){
+        this.updateUser(user, { 'tile' : tile} );
+      };
+      this.takeUserTile = function(user, tileObj){
+        this.updateUser(user, { 'tile' : tileObj.value} );
+        tileRef.child(tileObj.$id).remove();
+        
+      }
       this.initTiles = function(){
         this.setState("order");
         var options = startingTiles[this.users.length];
-        console.log(options);
         tileRef.remove();
         for (var t = 0; t< options.deck.length; t++){
           tileRef.push({
@@ -37,9 +63,7 @@
 
         for (var p = 0; p< this.users.length; p++){
             var choice = getRandomInt(options.hand.length-1);
-            userRef.child(this.users[p].$id).update({
-              'tile': options.hand[choice]
-            });
+            this.giveUserTileNum(this.users[p], options.hand[choice]);
             options.hand.splice(choice,1);
         }
         
@@ -74,6 +98,9 @@
           hand: [8,9,10,11,12]
         },
   };
+  var machines = [
+    { "workers" : 2, "production" : 2, "energy" : 2, "minPlayers": 2, "imageUrl": "blah"}, 
+  ];
   function getRandomInt(max) {
     return Math.floor(Math.random() * (max + 1));
   }
