@@ -70,7 +70,7 @@
       };
       
   }]);
-  var tiles = {
+  this.tiles = {
     1: {'discount' : 0},
     2: {'discount' : 0},
     3: {'discount' : 0},
@@ -98,8 +98,13 @@
           hand: [8,9,10,11,12]
         },
   };
-  var machines = [
-    { "workers" : 2, "production" : 2, "energy" : 2, "minPlayers": 2, "imageUrl": "blah"}, 
+
+  var defaultItems = [
+    { "workers" : 2, "production" : 2, "energy" : 2, "minPlayers": 2, "imageUrl": "blah", "itemType" : "machine"}, 
+    { "workers" : 2, "production" : 2, "energy" : 2, "minPlayers": 2, "imageUrl": "blah", "itemType" : "machine"}, 
+    { "storage" : 1, "minPlayers": 2, "imageUrl": "blah", "itemType" : "storage"}, 
+    { "storage" : 1, "minPlayers": 2, "imageUrl": "blah", "itemType" : "storage"}, 
+    { "storage" : 1, "minPlayers": 2, "imageUrl": "blah", "itemType" : "storage"}
   ];
   function getRandomInt(max) {
     return Math.floor(Math.random() * (max + 1));
