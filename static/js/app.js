@@ -1,4 +1,4 @@
 (function(){ 
-  var app = angular.module("game", ["pickOrder", "createUsers"]);
+  var app = angular.module("game", ["pickOrder", "createUsers", "market"]);
 
 })();

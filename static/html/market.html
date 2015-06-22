@@ -1,6 +1,5 @@
-<div class="marketCtrlDiv" ng-show="marketCtrl.state.state == 'market' || marketCtrl.state.state == 'initialMarket'">
-  <button ng-disabled="orderCtrl.selected == null" ng-click="orderCtrl.pick()"> Pick! {{orderCtrl.userPickButton()}}</button>
-  <div ng-click="orderCtrl.tileClicked(tile)" ng-repeat="tile in orderCtrl.tiles" class="col-md-4" >
-  <img ng-class="{ activeTile : orderCtrl.selected === tile }" class="img-responsive" ng-src="static/images/{{orderCtrl.getImgSRC(tile)}}"></img>
+<div class="marketCtrl" ng-show="marketCtrl.state.state == 'market'">
+  <div ng-class="{ activeTile : marketCtrl.selected === item }" ng-click="marketCtrl.itemClicked(item)" ng-repeat="item in marketCtrl.market" class="col-md-4" >
+    <p>Type: {{item.type}} </p> <br /> <p>Cost: {{item.cost}}</p>
   </div>
 </div>

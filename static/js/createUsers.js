@@ -45,28 +45,31 @@
           else{
             this.startButtonText = "Start the Game!";
           }
-
-
-
         };
         this.submitUserOK = function() {
           return this.newUser.length > 0 && dataService.users.length < 5;
         };
         this.nextStage = function () {
           $location.path('/initialOrder');
-          this.active = false;
           dataService.firstTimeTiles();
-        }
+        };
         function numPlayersOK(players){
           return players > 1 && players < 5;
         };
         function init(){
-          local.updateText(0);
           $location.path('/players');
           dataService.setState("players");
-        }
+        };
         var local = this;
-        init();
+        this.users.$loaded(
+          function(data) {
+            local.updateText();
+            init();
+          },
+          function(error) {
+            console.error("Error:", error);
+          }
+        );
       },
       controllerAs: "userCtrl"
     };

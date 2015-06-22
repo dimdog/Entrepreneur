@@ -1,6 +1,6 @@
 (function(){
   var app = angular.module("pickOrder", ["data"]);
-  app.directive("pickOrder", ["dataService", function(dataService) {
+  app.directive("pickOrder", ["$location", "dataService", function($location, dataService) {
     return {
       restrict: "E",
       templateUrl: "static/html/pick-order.html",
@@ -9,12 +9,16 @@
         var turn = 0;
         this.state = dataService.state;
         this.tiles = dataService.availableTiles;
+        this.users = [];
 
         this.userPickButton = function(){
           this.users = dataService.syncedUsers;
-          this.users.sort(function(a,b) { return a.tile > b.tile } );
-          this.selectedUser = this.users[turn];
-          return this.selectedUser.name;
+          if (this.users.length > 1 && turn < this.users.length){
+            this.users.sort(function(a,b) { return a.tile > b.tile } );
+            this.selectedUser = this.users[turn];
+            return this.selectedUser.name;
+          }
+          return "ERROR SHOULD NEVER SHOW UP AT pickOrder.js : 21"
 
         };
         this.getImgSRC = function(tile){
@@ -23,8 +27,6 @@
         };
         this.tileClicked = function(tile){
           this.selected = tile;
-          console.log(this.selected);
-
         };
         this.pick = function(){
           if (turn < this.users.length){
@@ -37,6 +39,8 @@
         };
         function nextStage(){
           dataService.setState("market");
+          $location.path('/market');
+          
 
         };
       },
