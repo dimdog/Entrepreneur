@@ -1,5 +1,5 @@
 <div  ng-show="orderCtrl.state.state == 'order'">
-  <button ng-disabled="orderCtrl.selected == null" ng-click="orderCtrl.pick()"> Pick a tile {{orderCtrl.userPickButton()}}</button>
+  <button ng-disabled="orderCtrl.selected == null || orderCtrl.localUser != " ng-click="orderCtrl.pick()"> Pick a tile {{orderCtrl.userPickButton()}}</button>
   <div ng-click="orderCtrl.tileClicked(tile)" ng-repeat="tile in orderCtrl.tiles" class="col-md-4" >
   <img ng-class="{ activeTile : orderCtrl.selected === tile }" class="img-responsive" ng-src="static/images/{{orderCtrl.getImgSRC(tile)}}"></img>
   </div>

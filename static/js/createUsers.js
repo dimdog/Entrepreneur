@@ -16,51 +16,51 @@
           this.newUser ="";
           this.updateText(1);
         };
-        this.selectUser = function (user) {
-          this.selectedUser = user;
-          this.deleteUserButtonText = "Delete " + user.name;
-        };
-        this.deleteUser = function() {
-          if (this.selectedUser){
-            dataService.deleteUser(this.selectedUser)
-            this.selectedUser = null;
-          }
-          this.updateText(-1);
-          this.deleteUserButtonText = "Delete player";
-        };
-        this.updateText = function(incr) {
+        this.updateText = function() {
 
-          if (dataService.users.length  + (incr || 0)  <5){
+          if (dataService.users.length<5){
             this.addUserButtonText = "Add " + (this.newUser || "Player");
           }
           else{
             this.addUserButtonText = "Can't add more players";
           }
-          if(dataService.users.length +(incr || 0) == 1){
+          if(dataService.users.length == 1){
             this.startButtonText = "Add one more player!";
           }
-          else if(dataService.users.length +(incr || 0) == 0){
+          else if(dataService.users.length== 0){
             this.startButtonText = "Add some players!";
           }
           else{
             this.startButtonText = "Start the Game!";
           }
         };
-        this.submitUserOK = function() {
-          return this.newUser.length > 0 && dataService.users.length < 5;
-        };
         this.nextStage = function () {
           $location.path('/initialOrder');
           dataService.firstTimeTiles();
         };
-        function numPlayersOK(players){
-          return players > 1 && players < 5;
+        this.numPlayersOK = function(){
+          return this.players > 1 && this.players < 5;
         };
         function init(){
+          // login with Facebook
+          dataService.auth.$authWithOAuthPopup("facebook").then(function(authData) {
+            dataService.addUser(authData.facebook.displayName);
+            console.log("Logged in as:", authData.uid);
+            console.log("Logged in as:", authData.facebook.displayName);
+            console.log(authData);
+            console.log(dataService.auth);
+          }).catch(function(error) {
+            console.log("Authentication failed:", error);
+          });
           $location.path('/players');
           dataService.setState("players");
         };
         var local = this;
+        this.users.$watch(
+          function(data) {
+            local.updateText();
+          }
+        );
         this.users.$loaded(
           function(data) {
             local.updateText();

@@ -10,16 +10,15 @@
         this.state = dataService.state;
         this.tiles = dataService.availableTiles;
         this.users = [];
+        this.localUser = dataService.localUser;
 
         this.userPickButton = function(){
           this.users = dataService.syncedUsers;
           if (this.users.length > 1 && turn < this.users.length){
             this.users.sort(function(a,b) { return a.tile > b.tile } );
             this.selectedUser = this.users[turn];
-            return this.selectedUser.name;
+            return this.selectedUser.name + "::" +this.selectedUser.tile;
           }
-          return "ERROR SHOULD NEVER SHOW UP AT pickOrder.js : 21"
-
         };
         this.getImgSRC = function(tile){
           return "order"+tile.value+".png";

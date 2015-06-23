@@ -2,12 +2,5 @@
   <li class="list-group-item" ng-class="{active : userCtrl.selectedUser === user}" ng-click="userCtrl.selectUser(user)" ng-repeat="user in userCtrl.users">
     <p> {{user.name}}</p>
   </li>
-
-<!-- push a new message onto the array -->
-  <form ng-submit="userCtrl.addUser()">
-    <input ng-change="userCtrl.updateText()" ng-model="userCtrl.newUser" placeholder="Player"></input>
-    <button type="submit" ng-disabled="!userCtrl.submitUserOK()"  > {{userCtrl.addUserButtonText}}</button>
-  </form>
-    <button ng-disabled="!userCtrl.selectedUser" ng-click="userCtrl.deleteUser()">{{userCtrl.deleteUserButtonText}}</button>
-    <button ng-disabled="userCtrl.numPlayersOK(userCtrl.users.length)" ng-click="userCtrl.nextStage()">{{userCtrl.startButtonText}}</button>
+    <button ng-disabled="userCtrl.numPlayersOK()" ng-click="userCtrl.nextStage()">{{userCtrl.startButtonText}}</button>
 </div>

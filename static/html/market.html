@@ -1,5 +1,17 @@
-<div class="marketCtrl" ng-show="marketCtrl.state.state == 'market'">
-  <div ng-class="{ activeTile : marketCtrl.selected === item }" ng-click="marketCtrl.itemClicked(item)" ng-repeat="item in marketCtrl.market" class="col-md-4" >
-    <p>Type: {{item.type}} </p> <br /> <p>Cost: {{item.cost}}</p>
+<div class="marketCtrl grid" ng-show="marketCtrl.state.state == 'market'">
+  <div class="row">
+    <div class="col-md-2" ng-repeat="(itemType, items) in marketCtrl.inventoryTypes">
+      <div ng-class="{ activeTile : marketCtrl.selected === item }" ng-click="marketCtrl.itemClicked(item)" ng-repeat="item in items">
+        <p>{{item.type}} : {{item.cost}} </p>
+      </div>
+    </div>
+  </div> 
+  <hr />
+  <button ng-disabled="marketCtrl.selected == null" ng-click="marketCtrl.pick()"> {{marketCtrl.userPickButton()}}</button>
+  <hr />
+  <div class="row">
+    <div ng-repeat="item in marketCtrl.market" class="col-md-4 clearfix" >
+      <p>Type: {{item.type}} </p> <br /> <p>Cost: {{item.cost}}</p>
+    </div>
   </div>
 </div>

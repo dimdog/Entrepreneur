@@ -1,13 +1,27 @@
 (function(){
   var app = angular.module("data", ["firebase"]);
 
-  app.service('dataService', ['$firebaseArray', '$firebaseObject', function($firebaseArray, $firebaseObject){
+  app.service('dataService', ['$firebaseArray', '$firebaseObject', '$firebaseAuth', function($firebaseArray, $firebaseObject, $firebaseAuth){
+      var local = this;
+      this.localUser = null;
 
       var stateRef = new Firebase('https://boiling-heat-634.firebaseio.com/state');
       this.state = $firebaseObject(stateRef);
 
+      this.state.$watch(function(data){
+          console.log(local.state.state);
+          if (local.state.state == "order"){
+            local.syncedUsers = local.syncUsers();
+            local.setUpFirstUsers();
+            setUpFirstMarket()
+          }
+
+      });
+
       var userRef = new Firebase('https://boiling-heat-634.firebaseio.com/users');
       this.users = $firebaseArray(userRef);
+      var authRef = new Firebase('https://boiling-heat-634.firebaseio.com/auth');
+      this.auth = $firebaseAuth(authRef);
 
       var tileRef = new Firebase('https://boiling-heat-634.firebaseio.com/tiles');
       this.availableTiles = $firebaseArray(tileRef);
@@ -17,19 +31,25 @@
 
       var inventoryRef = new Firebase('https://boiling-heat-634.firebaseio.com/inventory');
       this.inventory = $firebaseObject(inventoryRef);
-      var local = this;
 
       this.addUser = function(name){
+        for (var i = 0 ; i< this.users.length; i ++) {
+          if (this.users[i].name == name){
+            return;
+          }
+        }
         userRef.push({
           name: name,
           money: 18,
           seasonals: 0,
           slots: 0,
-        });
+        }).onDisconnect().remove();
       };
       this.deleteUser = function(user){
         userRef.child(user.$id).remove()
       }
+
+
 
       this.syncUsers = function(){
         var localUsers = [];
@@ -63,9 +83,6 @@
             value: options.deck[t]
           });
         }
-        this.syncedUsers = this.syncUsers();
-        this.setUpFirstUsers();
-        setUpFirstMarket()
 
         for (var p = 0; p< this.users.length; p++){
           var choice = getRandomInt(options.hand.length-1);
@@ -73,11 +90,13 @@
           options.hand.splice(choice,1);
         }
       }
+
       this.setUpFirstUsers = function() {
         for (var j=0; j<this.users.length; j++){
           this.updateUser(this.users[j], {'items' : defaultItems});
         }
       }
+
       function setUpFirstMarket() {
         marketRef.remove();
         for (var i =0;i<3;i++){
@@ -132,7 +151,7 @@
     { "workers" : -1, "energy" : 1, "minPlayers": 2, "imageUrl": "blah", "type" : "yellow", "cost": 6},
     { "production" : 1, "energy" : 2, "minPlayers": 2, "imageUrl": "blah", "type" : "red", "cost": 4},
     { "production" : 1, "energy" : -1, "minPlayers": 2, "imageUrl": "blah", "type" : "efficiency", "cost": 17},
-    { "workers" : -1, "energy" : -1, "minPlayers": 2, "imageUrl": "blah", "type" : "electrical-efficiency", "cost": 12},
+    { "workers" : -1, "energy" : -1, "minPlayers": 2, "imageUrl": "blah", "type" : "electricalEfficiency", "cost": 12},
 
   ];
   var machines = [
@@ -169,26 +188,26 @@
     { "production" : 3, "energy" : 2, "minPlayers": 2, "imageUrl": "blah", "type" : "red", "cost": 15},
     { "production" : 3, "energy" : 1, "minPlayers": 2, "imageUrl": "blah", "type" : "red", "cost": 20},
   ];
-  var efficiencys = [
+  var efficiencies = [
     { "workers" : 0, "production" : 1, "energy" : -1, "minPlayers": 2, "imageUrl": "blah", "type" : "efficiency", "cost": 17},
     { "workers" : 0, "production" : 1, "energy" : -2, "minPlayers": 2, "imageUrl": "blah", "type" : "efficiency", "cost": 22},
     { "workers" : 0, "production" : 2, "energy" : -2, "minPlayers": 2, "imageUrl": "blah", "type" : "efficiency", "cost": 30},
     { "workers" : -1, "production" : 2, "energy" : -3, "minPlayers": 2, "imageUrl": "blah", "type" : "efficiency", "cost": 39},
   ];
-  var electricalEfficiencys = [
-    { "workers" : -1, "energy" : -2, "minPlayers": 2, "imageUrl": "blah", "type" : "electrical-efficiency", "cost": 17},
-    { "workers" : -1, "energy" : -3, "minPlayers": 2, "imageUrl": "blah", "type" : "electrical-efficiency", "cost": 22},
-    { "workers" : -1, "energy" : -4, "minPlayers": 2, "imageUrl": "blah", "type" : "electrical-efficiency", "cost": 25},
-    { "workers" : -1, "energy" : -5, "minPlayers": 2, "imageUrl": "blah", "type" : "electrical-efficiency", "cost": 29},
-    { "workers" : -1, "energy" : -6, "minPlayers": 2, "imageUrl": "blah", "type" : "electrical-efficiency", "cost": 33},
+  var electricalEfficiencies = [
+    { "workers" : -1, "energy" : -2, "minPlayers": 2, "imageUrl": "blah", "type" : "electricalEfficiency", "cost": 17},
+    { "workers" : -1, "energy" : -3, "minPlayers": 2, "imageUrl": "blah", "type" : "electricalEfficiency", "cost": 22},
+    { "workers" : -1, "energy" : -4, "minPlayers": 2, "imageUrl": "blah", "type" : "electricalEfficiency", "cost": 25},
+    { "workers" : -1, "energy" : -5, "minPlayers": 2, "imageUrl": "blah", "type" : "electricalEfficiency", "cost": 29},
+    { "workers" : -1, "energy" : -6, "minPlayers": 2, "imageUrl": "blah", "type" : "electricalEfficiency", "cost": 33},
   ];
   var inventory = {
     "machines" : machines,
     "storages" : storages,
     "yellows" : yellows,
     "reds" : reds,
-    "efficiencys" : efficiencys,
-    "electricalEfficiencys" : electricalEfficiencys
+    "efficiencies" : efficiencies,
+    "electricalEfficiencies" : electricalEfficiencies
   };
   function getRandomInt(max) {
     return Math.floor(Math.random() * (max + 1));
