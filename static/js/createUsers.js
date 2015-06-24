@@ -36,7 +36,7 @@
         };
         this.nextStage = function () {
           $location.path('/initialOrder');
-          dataService.firstTimeTiles();
+          dataService.setUpFirstUsers();
         };
         this.numPlayersOK = function(){
           return this.players > 1 && this.players < 5;
@@ -45,10 +45,6 @@
           // login with Facebook
           dataService.auth.$authWithOAuthPopup("facebook").then(function(authData) {
             dataService.addUser(authData.facebook.displayName);
-            console.log("Logged in as:", authData.uid);
-            console.log("Logged in as:", authData.facebook.displayName);
-            console.log(authData);
-            console.log(dataService.auth);
           }).catch(function(error) {
             console.log("Authentication failed:", error);
           });

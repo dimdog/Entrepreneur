@@ -5,18 +5,45 @@
       restrict: "E",
       templateUrl: "static/html/pick-order.html",
       controller: function() {
+        var local = this;
         this.selected = null;
-        var turn = 0;
         this.state = dataService.state;
         this.tiles = dataService.availableTiles;
         this.users = [];
-        this.localUser = dataService.localUser;
+
+        this.state.$watch(function(data){
+            if (local.state.state == "order" && local.state.turn == null){
+              dataService.syncedUsers = dataService.syncUsers();
+              local.users = dataService.syncedUsers;
+              local.localUser = dataService.localUser;
+            }
+            else if (local.state.state == "order" && local.state.turn == 0){
+              local.calculateCurrentUserTurn();
+          
+            }
+            else if (local.state.state == "order" && local.state.turn > 0){
+              local.currentUserTurn();
+            } 
+            if (local.state.turn == local.users.length && local.state.turn > 0){
+              nextStage();
+            }
+
+        });
+        this.currentUserTurn = function(){
+            console.log(this.users);
+            console.log(this.state);
+            this.selectedUser = this.users[this.state.turn];
+            return this.selectedUser;
+        };
+
+        this.calculateCurrentUserTurn = function(){
+          this.users.sort(function(a,b) { return a.tile < b.tile } );
+          return this.currentUserTurn();
 
         this.userPickButton = function(){
-          this.users = dataService.syncedUsers;
-          if (this.users.length > 1 && turn < this.users.length){
-            this.users.sort(function(a,b) { return a.tile > b.tile } );
-            this.selectedUser = this.users[turn];
+            if (this.users = []){
+              this.calculateCurrentUserTurn();
+            }
             return this.selectedUser.name + "::" +this.selectedUser.tile;
           }
         };
@@ -28,13 +55,8 @@
           this.selected = tile;
         };
         this.pick = function(){
-          if (turn < this.users.length){
-            turn++;
-            dataService.takeUserTile(this.selectedUser, this.selected);
-          }
-          if (turn == this.users.length){
-            nextStage();
-          }
+          dataService.setTurn(this.state.turn+1);
+          dataService.takeUserTile(this.selectedUser, this.selected);
         };
         function nextStage(){
           dataService.setState("market");
