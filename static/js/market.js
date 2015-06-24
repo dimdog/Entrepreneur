@@ -17,7 +17,7 @@
             if (local.state.state == "market"){
             
               local.init();
-              console.log(local.inventoryTypes);
+              local.localUser = dataService.localUser;
             }
           });
         });
@@ -35,10 +35,21 @@
 
         };
         this.userPickButton = function() {
-          //TODO already have the users sorted. 
+          console.log("here");
+          return this.selectedUser.name;
           // TODO list the number of workers available to pull tiles down.
           // change users 
         };
+        this.currentUserTurn = function(){
+            this.selectedUser = this.users[this.state.turn];
+            return this.selectedUser;
+        };
+
+        this.calculateCurrentUserTurn = function(){
+          this.users.sort(function(a,b) { return a.tile < b.tile } );
+          return this.currentUserTurn();
+        };
+
         this.init = function(){
           this.inventoryTypes = {
              "machine": this.inventory.inventory.machines ,
@@ -47,6 +58,7 @@
              "electricalEfficiency": this.inventory.inventory.electricalEfficiencies ,
              "efficiency": this.inventory.inventory.efficiencies ,
           }; 
+          local.calculateCurrentUserTurn();
 
         };
         

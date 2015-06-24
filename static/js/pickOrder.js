@@ -30,8 +30,6 @@
 
         });
         this.currentUserTurn = function(){
-            console.log(this.users);
-            console.log(this.state);
             this.selectedUser = this.users[this.state.turn];
             return this.selectedUser;
         };
@@ -39,14 +37,8 @@
         this.calculateCurrentUserTurn = function(){
           this.users.sort(function(a,b) { return a.tile < b.tile } );
           return this.currentUserTurn();
-
-        this.userPickButton = function(){
-            if (this.users = []){
-              this.calculateCurrentUserTurn();
-            }
-            return this.selectedUser.name + "::" +this.selectedUser.tile;
-          }
         };
+
         this.getImgSRC = function(tile){
           return "order"+tile.value+".png";
 

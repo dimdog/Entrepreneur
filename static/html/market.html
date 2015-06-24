@@ -7,7 +7,7 @@
     </div>
   </div> 
   <hr />
-  <button ng-disabled="marketCtrl.selected == null" ng-click="marketCtrl.pick()"> {{marketCtrl.userPickButton()}}</button>
+  <button ng-disabled="marketCtrl.selected == null || marketCtrl.selectedUser != marketCtrl.localUser " ng-click="marketCtrl.pick()"> {{marketCtrl.userPickButton()}}</button>
   <hr />
   <div class="row">
     <div ng-repeat="item in marketCtrl.market" class="col-md-4 clearfix" >
