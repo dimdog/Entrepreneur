@@ -1,4 +1,4 @@
-(function(){ 
+(function(){
   var app = angular.module("createUsers", ["data"]);
   app.directive("createUsers", ['$location', 'dataService', function($location, dataService) {
     return {
@@ -8,7 +8,7 @@
         this.state = dataService.state;
         this.addUserButtonText = "Add Player";
         this.deleteUserButtonText = "Delete player";
-        this.selectedUser = null; 
+        this.selectedUser = null;
         this.newUser="";
         this.users = dataService.users;
         this.addUser = function() {
@@ -16,9 +16,9 @@
           this.newUser ="";
           this.updateText(1);
         };
-        this.selectUser = function (user) { 
-          this.selectedUser = user; 
-          this.deleteUserButtonText = "Delete " + user.name; 
+        this.selectUser = function (user) {
+          this.selectedUser = user;
+          this.deleteUserButtonText = "Delete " + user.name;
         };
         this.deleteUser = function() {
           if (this.selectedUser){
@@ -29,7 +29,7 @@
           this.deleteUserButtonText = "Delete player";
         };
         this.updateText = function(incr) {
-          
+
           if (dataService.users.length  + (incr || 0)  <5){
             this.addUserButtonText = "Add " + (this.newUser || "Player");
           }
@@ -45,17 +45,17 @@
           else{
             this.startButtonText = "Start the Game!";
           }
-          
-          
-          
+
+
+
         };
         this.submitUserOK = function() {
           return this.newUser.length > 0 && dataService.users.length < 5;
         };
         this.nextStage = function () {
-          $location.path('/order');
+          $location.path('/initialOrder');
           this.active = false;
-          dataService.initTiles();
+          dataService.firstTimeTiles();
         }
         function numPlayersOK(players){
           return players > 1 && players < 5;
@@ -73,4 +73,3 @@
   }]);
 
 })();
-

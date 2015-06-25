@@ -1,8 +1,8 @@
 (function(){
   var app = angular.module("data", ["firebase"]);
- 
+
   app.service('dataService', ['$firebaseArray', '$firebaseObject', function($firebaseArray, $firebaseObject){
-      
+
       var userRef = new Firebase('https://boiling-heat-634.firebaseio.com/users');
       this.users = $firebaseArray(userRef);
       this.addUser = function(name){
@@ -24,6 +24,7 @@
         }
         return localUsers;
       };
+      this.syncedUsers = []
 
 
 
@@ -41,7 +42,7 @@
       this.availableTiles = $firebaseArray(tileRef);
       this.updateUser = function(user, updateObj){
         userRef.child(user.$id).update(updateObj);
-        
+
       };
       this.giveUserTileNum = function(user, tile){
         this.updateUser(user, { 'tile' : tile} );
@@ -49,16 +50,17 @@
       this.takeUserTile = function(user, tileObj){
         this.updateUser(user, { 'tile' : tileObj.value} );
         tileRef.child(tileObj.$id).remove();
-        
+
       }
-      this.initTiles = function(){
-        this.setState("order");
+      this.firstTimeTiles = function(){
+        this.setState("initialOrder");
         var options = startingTiles[this.users.length];
         tileRef.remove();
         for (var t = 0; t< options.deck.length; t++){
           tileRef.push({
             value: options.deck[t]
           });
+        this.syncedUsers = this.syncUsers;
         }
 
         for (var p = 0; p< this.users.length; p++){
@@ -66,9 +68,9 @@
             this.giveUserTileNum(this.users[p], options.hand[choice]);
             options.hand.splice(choice,1);
         }
-        
+
       };
-      
+
   }]);
   this.tiles = {
     1: {'discount' : 0},
@@ -100,10 +102,10 @@
   };
 
   var defaultItems = [
-    { "workers" : 2, "production" : 2, "energy" : 2, "minPlayers": 2, "imageUrl": "blah", "itemType" : "machine"}, 
-    { "workers" : 2, "production" : 2, "energy" : 2, "minPlayers": 2, "imageUrl": "blah", "itemType" : "machine"}, 
-    { "storage" : 1, "minPlayers": 2, "imageUrl": "blah", "itemType" : "storage"}, 
-    { "storage" : 1, "minPlayers": 2, "imageUrl": "blah", "itemType" : "storage"}, 
+    { "workers" : 2, "production" : 2, "energy" : 2, "minPlayers": 2, "imageUrl": "blah", "itemType" : "machine"},
+    { "workers" : 2, "production" : 2, "energy" : 2, "minPlayers": 2, "imageUrl": "blah", "itemType" : "machine"},
+    { "storage" : 1, "minPlayers": 2, "imageUrl": "blah", "itemType" : "storage"},
+    { "storage" : 1, "minPlayers": 2, "imageUrl": "blah", "itemType" : "storage"},
     { "storage" : 1, "minPlayers": 2, "imageUrl": "blah", "itemType" : "storage"}
   ];
   function getRandomInt(max) {
